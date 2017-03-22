@@ -1,4 +1,7 @@
-import Command.AbstractCommand;
+package handler;
+
+import command.AbstractCommand;
+import main.Main;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -18,7 +21,7 @@ public class CommandHandler {
 
     public CommandHandler() {
         // Load commands into hash map
-        Reflections reflections = new Reflections("Command");
+        Reflections reflections = new Reflections("command");
         Set<Class<? extends AbstractCommand>> abstractCommands = reflections.getSubTypesOf(AbstractCommand.class);
         for (Class<? extends AbstractCommand> c : abstractCommands) {
             try {
@@ -58,7 +61,7 @@ public class CommandHandler {
         if (!args[0].equals(Main.getBotAsMention()) || args.length == 1)
             return;
         String command = args[1];
-        System.out.println("Command: " + command);
+        System.out.println("command: " + command);
         AbstractCommand cmd = commands.get(command);
         if (cmd == null) {
             channel.sendMessage("Invalid command. Please enter \""

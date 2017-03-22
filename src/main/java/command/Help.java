@@ -1,4 +1,4 @@
-package Command;
+package command;
 
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;

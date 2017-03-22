@@ -1,4 +1,4 @@
-package Command;
+package command;
 
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -12,10 +12,14 @@ public abstract class AbstractCommand {
 
     /**
      * Get the command name that is used to execute the command
+     *
      * @return
      */
     public abstract String getName();
+
     public abstract String getDescription();
+
     public abstract String[] getUsage();
+
     public abstract void execute(String[] args, MessageChannel ch, User user);
 }
