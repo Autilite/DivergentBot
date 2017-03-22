@@ -9,9 +9,9 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Kelvin on 22/03/2017.
@@ -49,18 +49,18 @@ public class CommandHandler {
             return;
 
         // Split message into string array to check if it's a command
-        String[] args = msg.split("\\s+");
-        for (int i = 0; i < args.length; i++) {
-            System.out.println("Arg[" + i + "]: " + "\"" + args[i] + "\"");
+        List<String> args = splitSpaceExceptQuotes(msg);
+        for (int i = 0; i < args.size(); i++) {
+            System.out.println("Arg[" + i + "]: " + "\"" + args.get(i) + "\"");
         }
 
         // Check if the message is a command:
         //  1) Uses correct prefix
-        //  2) Prefix is followed by a command
+        //  2) Command contains more than just the prefix
         //  3) First argument is a valid command name
-        if (!args[0].equals(Main.getBotAsMention()) || args.length == 1)
+        if (!args.get(0).equals(Main.getBotAsMention()) || args.size() == 1)
             return;
-        String command = args[1];
+        String command = args.get(1);
         System.out.println("command: " + command);
         AbstractCommand cmd = commands.get(command);
         if (cmd == null) {
@@ -71,8 +71,20 @@ public class CommandHandler {
         }
 
         // Execute the command with the given arguments
-        String[] cmdArgs = Arrays.copyOfRange(args, 2, args.length);
+        args.remove(0); // Remove prefix
+        args.remove(0); // and commend
+        String[] cmdArgs = args.toArray(new String[0]);
         System.out.println("Execute command: " + "\"" + cmd.getName() + "\"");
         cmd.execute(cmdArgs, channel, author);
+    }
+
+    private List<String> splitSpaceExceptQuotes(String string) {
+        // https://stackoverflow.com/questions/7804335/split-string-on-spaces-in-java-except-if-between-quotes-i-e-treat-hello-wor
+        LinkedList<String> list = new LinkedList<>();
+        Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(string);
+        while (m.find()) {
+            list.add(m.group(1).replace("\"", ""));
+        }
+        return list;
     }
 }
