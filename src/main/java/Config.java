@@ -3,5 +3,6 @@
  */
 public class Config {
 
-    public static String BOT_TOKEN = "token";
+    public static final String BOT_TOKEN = "token";
+    public static final String COMMAND_PREFIX = "!";
 }

@@ -14,7 +14,8 @@ public class Main {
     public static void main (String[] args) {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.BOT_TOKEN).buildBlocking();
-            jda.addEventListener(new MessageListener());
+            CommandHandler handler = new CommandHandler();
+            jda.addEventListener(new MessageListener(handler));
         } catch (LoginException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
