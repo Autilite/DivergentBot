@@ -24,4 +24,8 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    public static String getBotAsMention () {
+        return jda.getSelfUser().getAsMention();
+    }
 }

@@ -39,7 +39,7 @@ public class CommandHandler {
         User author = event.getAuthor();
         Message message = event.getMessage();
         MessageChannel channel = event.getChannel();
-        String msg = message.getContent();
+        String msg = message.getRawContent();
 
         // Don't process message if the author is a bot
         if (author.isBot())
@@ -51,19 +51,24 @@ public class CommandHandler {
             System.out.println("Arg[" + i + "]: " + "\"" + args[i] + "\"");
         }
 
-        // Check if the message is a command: uses correct prefix and is has valid command name
-        if (!args[0].startsWith(Config.COMMAND_PREFIX))
+        // Check if the message is a command:
+        //  1) Uses correct prefix
+        //  2) Prefix is followed by a command
+        //  3) First argument is a valid command name
+        if (!args[0].equals(Main.getBotAsMention()) || args.length == 1)
             return;
-        String command = args[0].substring(1);
+        String command = args[1];
         System.out.println("Command: " + command);
         AbstractCommand cmd = commands.get(command);
         if (cmd == null) {
-            System.out.println("Invalid command");
+            channel.sendMessage("Invalid command. Please enter \""
+                    + Main.getBotAsMention()
+                    + " help\" for a list of commands.").queue();
             return;
         }
 
-        // Execute the command
-        String[] cmdArgs = Arrays.copyOfRange(args, 1, args.length);
+        // Execute the command with the given arguments
+        String[] cmdArgs = Arrays.copyOfRange(args, 2, args.length);
         System.out.println("Execute command: " + "\"" + cmd.getName() + "\"");
         cmd.execute(cmdArgs, channel, author);
     }
