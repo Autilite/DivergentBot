@@ -1,6 +1,7 @@
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
@@ -16,6 +17,7 @@ public class Main {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.BOT_TOKEN).buildBlocking();
             CommandHandler handler = new CommandHandler();
             jda.addEventListener(new MessageListener(handler));
+            jda.getPresence().setGame(Game.of(Config.STATUS_MESSAGE));
         } catch (LoginException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
