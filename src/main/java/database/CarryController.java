@@ -36,13 +36,17 @@ public class CarryController {
     public static Set<String> getRequestList(String atkerId) {
         String key = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId);
         String keypPattern = key + Config.REDIS_KEY_SEPARATOR + Config.REDIS_WILDCARD;
+        System.out.println(keypPattern);
         Set<String> results = Main.jedis.keys(keypPattern);
+        System.out.println(results.toString());
 
         return results;
     }
 
     public static void requestCarry(String requesterId, String atkerId, String boss, int amount) {
         String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
+        System.out.println("REDIS KEY:");
+        System.out.println(atkerRequestKey);
         Main.jedis.incrBy(atkerRequestKey, amount);
     }
 

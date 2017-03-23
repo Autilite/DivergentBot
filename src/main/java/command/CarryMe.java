@@ -10,15 +10,15 @@ import static main.Utils.stripId;
 /**
  * Created by Kelvin on 22/03/2017.
  */
-public class Carry extends AbstractCommand {
+public class CarryMe extends AbstractCommand {
     @Override
     public String getName() {
-        return "carry";
+        return "carryme";
     }
 
     @Override
     public String getDescription() {
-        return "Add a person to your carry list";
+        return "Request a carry from a user";
     }
 
     @Override
@@ -33,8 +33,6 @@ public class Carry extends AbstractCommand {
         String target = stripId(args[0]);
         String boss = args[1];
         int amount = 1;
-        System.out.println("args length");
-        System.out.println(args.length);
         if (args.length == 3) {
             amount = Integer.parseInt(args[2]);
             if (amount <= 0) {
@@ -43,15 +41,14 @@ public class Carry extends AbstractCommand {
             }
         }
         String author = stripId(user.getId());
-        System.out.println("Add carry to: " + author + ":" + target + ":" + boss + ":" + amount);
+        System.out.println("Add request to: " + target + ":" + author + ":" + boss + ":" + amount);
         if (author.equals(target)) {
             // TODO custom emoji
             ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list :que:").queue();
             return;
         }
-        CarryController.addCarry(author, target, boss, amount);
-        ch.sendMessage(user.getName() + " has provided " + amount + " " + boss + " carry run(s) "
-        + Main.jda.getUserById(target).getAsMention()).queue();
+        CarryController.requestCarry(author, target, boss, amount);
+        ch.sendMessage(user.getName() + " has requested " + amount + " " + boss + " carry run(s) from "
+                + Main.jda.getUserById(target).getAsMention()).queue();
     }
-
 }

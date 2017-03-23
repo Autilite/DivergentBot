@@ -14,15 +14,15 @@ import static main.Utils.carryModelLeecherToString;
 /**
  * Created by Kelvin on 22/03/2017.
  */
-public class CarryList extends AbstractCommand {
+public class RequestList extends AbstractCommand {
     @Override
     public String getName() {
-        return "carrylist";
+        return "raggaeclaw";
     }
 
     @Override
     public String getDescription() {
-        return "Show the list of people you will carry (and their respective boss(es))";
+        return "Shows a list of users who requested a carry from me";
     }
 
     @Override
@@ -46,21 +46,20 @@ public class CarryList extends AbstractCommand {
             }
         }
         System.out.println("target " + target);
-        response.append(Main.jda.getUserById(target).getName()).append(" is currently carrying the following users");
+        response.append(Main.jda.getUserById(target).getName()).append(" has been requested to carry the following:");
 
-        Set<String> carrylist = CarryController.getCarryList(target);
+        Set<String> carrylist = CarryController.getRequestList(target);
         if (carrylist.size() == 0) {
             response.append("\nEmpty carry list");
         } else {
             //response.append("\n").append(s)
             carrylist.forEach(s -> {
-                       CarryModel model = CarryController.getValue(s);
-                       response.append("\n").append(carryModelLeecherToString(model));
+                        CarryModel model = CarryController.getValue(s);
+                        response.append("\n").append(carryModelLeecherToString(model));
                     }
             );
         }
         ch.sendMessage(user.getAsMention() + "\n" + response.toString()).queue();
     }
-
 
 }
