@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import redis.clients.jedis.Jedis;
 
 import javax.security.auth.login.LoginException;
 
@@ -15,6 +16,7 @@ import javax.security.auth.login.LoginException;
 public class Main {
 
     public static JDA jda;
+    public static Jedis jedis;
     public static void main (String[] args) {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.BOT_TOKEN).buildBlocking();
@@ -28,6 +30,7 @@ public class Main {
         } catch (RateLimitedException e) {
             e.printStackTrace();
         }
+        jedis = new Jedis(Config.REDIS_HOST);
     }
 
     public static String getBotAsMention () {
