@@ -38,6 +38,7 @@ public class CarryMe extends AbstractCommand {
             if (amount <= 0) {
                 ch.sendMessage(user.getAsMention() + "\nYou cannot select a non-positive amount of carries :que:")
                         .queue();
+                return;
             }
         }
         String author = stripId(user.getId());

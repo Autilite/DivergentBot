@@ -78,12 +78,31 @@ public class CarryController {
         if (Main.jedis.get(atkerRequestKey) == null) {
             // This carry was not in atker's request list
             throw new NonexistingCarryException("The boss was not in the atker's request list");
+        } else {
+            Main.jedis.watch(atkerRequestKey, atkerCarryKey);
+            Transaction t = Main.jedis.multi();
+            t.del(atkerRequestKey);
+            t.incrBy(atkerCarryKey, amount);
+            t.exec();
         }
-        Main.jedis.watch(atkerRequestKey, atkerCarryKey);
-        Transaction t = Main.jedis.multi();
-        t.del(atkerRequestKey);
-        t.incrBy(atkerCarryKey, amount);
-        t.exec();
+    }
+
+    public static void denyCarry(String atkerId, String requesterId, String boss) throws NonexistingCarryException {
+        String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
+        if (Main.jedis.get(atkerRequestKey) == null) {
+            throw new NonexistingCarryException("There exists no " + boss + "request from " + requesterId);
+        } else {
+            Main.jedis.del(atkerRequestKey);
+        }
+    }
+
+    public static void denyCarry(String atkerId, String requesterId) {
+        String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId);
+        String keypPattern = atkerRequestKey + Config.REDIS_KEY_SEPARATOR + Config.REDIS_WILDCARD;
+        System.out.println("KEY PATTERN");
+        System.out.println(keypPattern);
+        Set<String> keys = Main.jedis.keys(keypPattern);
+        keys.forEach(s -> Main.jedis.del(s));
     }
 
     public static void addCarry(String atkerId, String requesterId, String boss, int amount) {
@@ -138,4 +157,5 @@ public class CarryController {
         String key = keyword + Config.REDIS_KEY_SEPARATOR + atkerId;
         return key;
     }
+
 }
