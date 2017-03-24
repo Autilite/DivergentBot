@@ -31,7 +31,7 @@ public class Help extends AbstractCommand {
 //        ch.sendMessage(user.getAsMention() + " please, how can I help you if I can't even solo chaos vellum?")
 //                .queue();
         StringBuilder help = new StringBuilder();
-        help.append("```Markdown\n");
+        help.append("```fix\n");
         help.append("List of Commands:\n");
         CommandHandler.getCommands().forEach(abstractCommand -> {
             help.append("\n  ");
