@@ -1,5 +1,6 @@
 package database;
 
+import exception.NonexistingCarryException;
 import main.Config;
 import main.Main;
 import redis.clients.jedis.Response;
@@ -50,7 +51,7 @@ public class CarryController {
         Main.jedis.incrBy(atkerRequestKey, amount);
     }
 
-    public static void acceptCarry(String atkerId, String requesterId, String boss) {
+    public static void acceptCarry(String atkerId, String requesterId, String boss) throws NonexistingCarryException {
         String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
         String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
 
@@ -60,8 +61,29 @@ public class CarryController {
         t.del(atkerRequestKey);
         t.exec();
 
-        int amt = Integer.parseInt(amount.get());
-        Main.jedis.incrBy(atkerCarryKey, amt);
+        try {
+            int amt = Integer.parseInt(amount.get());
+            // TODO check this response to make sure it goes through
+            Main.jedis.incrBy(atkerCarryKey, amt);
+        } catch (NumberFormatException e) {
+            // This carry was not in atker's request list
+            throw new NonexistingCarryException("The boss was not in the atker's request list");
+        }
+    }
+
+    public static void acceptCarry(String atkerId, String requesterId, String boss, int amount) throws NonexistingCarryException {
+        String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
+        String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
+
+        if (Main.jedis.get(atkerRequestKey) == null) {
+            // This carry was not in atker's request list
+            throw new NonexistingCarryException("The boss was not in the atker's request list");
+        }
+        Main.jedis.watch(atkerRequestKey, atkerCarryKey);
+        Transaction t = Main.jedis.multi();
+        t.del(atkerRequestKey);
+        t.incrBy(atkerCarryKey, amount);
+        t.exec();
     }
 
     public static void addCarry(String atkerId, String requesterId, String boss, int amount) {

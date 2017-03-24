@@ -55,7 +55,7 @@ public class CarryList extends AbstractCommand {
             //response.append("\n").append(s)
             carrylist.forEach(s -> {
                        CarryModel model = CarryController.getValue(s);
-                       response.append("\n").append(carryModelLeecherToString(model));
+                       response.append("\n ").append(carryModelLeecherToString(model));
                     }
             );
         }

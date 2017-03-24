@@ -47,6 +47,7 @@ public class CarryMe extends AbstractCommand {
             ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list :que:").queue();
             return;
         }
+        // TODO check if target is a user in the guild
         CarryController.requestCarry(author, target, boss, amount);
         ch.sendMessage(user.getName() + " has requested " + amount + " " + boss + " carry run(s) from "
                 + Main.jda.getUserById(target).getAsMention()).queue();
