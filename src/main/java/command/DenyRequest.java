@@ -18,20 +18,23 @@ public class DenyRequest extends AbstractCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Reject a carry request from your request list.";
     }
 
     @Override
     public String[] getUsage() {
-        return new String[0];
+        return new String[]{
+                getName() + " @target [boss]"
+        };
     }
 
     @Override
     public void execute(String[] args, MessageChannel ch, User user) {
         // @FluffyBot evilcolee @target [boss]
-        if (!(args.length == 1) && !(args.length == 2))
-            // TODO send usage command
+        if (!(args.length == 1) && !(args.length == 2)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;
+        }
         // Parse arguments
         String target = Utils.stripId(args[0]);
         if (args.length == 1) {

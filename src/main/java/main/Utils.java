@@ -17,4 +17,15 @@ public class Utils {
         }
         return s;
     }
+
+    public static String usageToString(String[] usage) {
+        if (usage.length == 0)
+            return "";
+        StringBuilder builder = new StringBuilder(usage[0]);
+        for (int i = 1; i < usage.length; i++) {
+            builder.append(" ").append(usage[i]);
+        }
+        return builder.toString();
+    }
+
 }

@@ -1,6 +1,7 @@
 package handler;
 
 import command.AbstractCommand;
+import command.Help;
 import main.Main;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by Kelvin on 22/03/2017.
  */
 public class CommandHandler {
-    private HashMap<String, AbstractCommand> commands = new HashMap<>();
+    private static HashMap<String, AbstractCommand> commands = new HashMap<>();
 
     public CommandHandler() {
         // Load commands into hash map
@@ -27,6 +28,7 @@ public class CommandHandler {
             try {
                 AbstractCommand cmd = c.getConstructor().newInstance();
                 String name = cmd.getName();
+                // Associate the cmd name (not class name) to the cmd)
                 if (!commands.containsKey(name)) {
                     commands.put(name, cmd);
                 }
@@ -64,9 +66,10 @@ public class CommandHandler {
         System.out.println("command: " + command);
         AbstractCommand cmd = commands.get(command);
         if (cmd == null) {
-            channel.sendMessage("Invalid command. Please enter \""
-                    + Main.getBotAsMention()
-                    + " help\" for a list of commands.").queue();
+            Help help = new Help();
+            channel.sendMessage("Invalid command. Please enter `@"
+                    + Main.jda.getSelfUser().getName()
+                    + " "+ help.getName() + "` for a list of commands.").queue();
             return;
         }
 
@@ -76,6 +79,12 @@ public class CommandHandler {
         String[] cmdArgs = args.toArray(new String[0]);
         System.out.println("Execute command: " + "\"" + cmd.getName() + "\"");
         cmd.execute(cmdArgs, channel, author);
+    }
+
+    public static Set<AbstractCommand> getCommands() {
+        Set<AbstractCommand> cmds = new HashSet<>();
+        commands.forEach((s, abstractCommand) -> cmds.add(abstractCommand));
+        return cmds;
     }
 
     private List<String> splitSpaceExceptQuotes(String string) {

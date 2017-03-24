@@ -18,40 +18,48 @@ public class AcceptRequest extends AbstractCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Accept a carry request from your request list.";
     }
 
     @Override
     public String[] getUsage() {
-        return new String[0];
+        return new String[]{
+                getName() + " @target boss [amount]"
+        };
     }
 
     @Override
     public void execute(String[] args, MessageChannel ch, User user) {
-        // @FluffyBot nicecolee @target boss [amount]
-        if (!(args.length == 2) && !(args.length == 3))
-            // TODO send usage command
+        if (!(args.length == 2) && !(args.length == 3)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;
+        }
         // Parse arguments
         String target = Utils.stripId(args[0]);
         String boss = args[1];
         int amount = 1;
         if (args.length == 3) {
+            // and amount argument
             try {
-                // and validate arguments
                 amount = Integer.parseInt(args[2]);
-                if (amount > 0) {
-                    CarryController.acceptCarry(user.getId(), target, boss, amount);
+                if (amount <= 0) {
+                    ch.sendMessage(user.getAsMention() + "\nYou cannot select a non-positive amount of carries :que:")
+                            .queue();
+                    return;
                 }
             } catch (NumberFormatException e){
-                ch.sendMessage("Invalid argument").queue();
+                ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
                 return;
+            }
+            // accept those carries
+            try {
+                CarryController.acceptCarry(user.getId(), target, boss, amount);
             } catch (NonexistingCarryException e) {
                 ch.sendMessage(user.getAsMention() + "\nThis request was not in your request list").queue();
                 return;
             }
         } else {
-            // accept all carries for this boss
+            // if no amount specified, accept all carries for this boss
             try {
                 CarryController.acceptCarry(user.getId(), target, boss);
             } catch (NonexistingCarryException e) {

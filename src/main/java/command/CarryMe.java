@@ -2,6 +2,7 @@ package command;
 
 import database.CarryController;
 import main.Main;
+import main.Utils;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
@@ -23,18 +24,27 @@ public class CarryMe extends AbstractCommand {
 
     @Override
     public String[] getUsage() {
-        return new String[0];
+        return new String[]{
+                getName() + " @target boss [amount]"
+        };
     }
 
     @Override
     public void execute(String[] args, MessageChannel ch, User user) {
-        if (!(args.length == 2) && !(args.length == 3))
+        if (!(args.length == 2) && !(args.length == 3)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;
+        }
         String target = stripId(args[0]);
         String boss = args[1];
         int amount = 1;
         if (args.length == 3) {
-            amount = Integer.parseInt(args[2]);
+            try {
+                amount = Integer.parseInt(args[2]);
+            } catch (NumberFormatException e){
+                ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+                return;
+            }
             if (amount <= 0) {
                 ch.sendMessage(user.getAsMention() + "\nYou cannot select a non-positive amount of carries :que:")
                         .queue();

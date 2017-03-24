@@ -27,7 +27,9 @@ public class CarryList extends AbstractCommand {
 
     @Override
     public String[] getUsage() {
-        return new String[0];
+        return new String[]{
+                getName() + " [@target]"
+        };
     }
 
     @Override
@@ -52,7 +54,6 @@ public class CarryList extends AbstractCommand {
         if (carrylist.size() == 0) {
             response.append("\nEmpty carry list");
         } else {
-            //response.append("\n").append(s)
             carrylist.forEach(s -> {
                        CarryModel model = CarryController.getValue(s);
                        response.append("\n ").append(carryModelLeecherToString(model));
