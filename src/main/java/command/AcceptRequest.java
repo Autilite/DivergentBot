@@ -1,7 +1,7 @@
 package command;
 
 import database.CarryController;
-import exception.NonexistingCarryException;
+import exception.NonexistentCarryException;
 import main.Main;
 import main.Utils;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -54,7 +54,7 @@ public class AcceptRequest extends AbstractCommand {
             // accept those carries
             try {
                 CarryController.acceptCarry(user.getId(), target, boss, amount);
-            } catch (NonexistingCarryException e) {
+            } catch (NonexistentCarryException e) {
                 ch.sendMessage(user.getAsMention() + "\nThis request was not in your request list").queue();
                 return;
             }
@@ -62,7 +62,7 @@ public class AcceptRequest extends AbstractCommand {
             // if no amount specified, accept all carries for this boss
             try {
                 CarryController.acceptCarry(user.getId(), target, boss);
-            } catch (NonexistingCarryException e) {
+            } catch (NonexistentCarryException e) {
                 // value for this key did not exist so there were no carries to accept
                 ch.sendMessage(user.getAsMention() + "\nThis request was not in your request list").queue();
                 return;

@@ -1,7 +1,7 @@
 package command;
 
 import database.CarryController;
-import exception.NonexistingCarryException;
+import exception.NonexistentCarryException;
 import main.Main;
 import main.Utils;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -49,7 +49,7 @@ public class DenyRequest extends AbstractCommand {
                 CarryController.denyCarry(user.getId(), target, boss);
                 ch.sendMessage(user.getAsMention() + "\nRejected `" + boss +"` requests from "
                         + Main.jda.getUserById(target).getAsMention()).queue();
-            } catch (NonexistingCarryException e) {
+            } catch (NonexistentCarryException e) {
                 ch.sendMessage(user.getAsMention() + "\nYou have no `" + boss + "` request from "
                         + Main.jda.getUserById(target).getName()).queue();
             }

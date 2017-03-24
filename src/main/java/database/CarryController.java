@@ -1,6 +1,6 @@
 package database;
 
-import exception.NonexistingCarryException;
+import exception.NonexistentCarryException;
 import main.Config;
 import main.Main;
 import redis.clients.jedis.Response;
@@ -51,7 +51,7 @@ public class CarryController {
         Main.jedis.incrBy(atkerRequestKey, amount);
     }
 
-    public static void acceptCarry(String atkerId, String requesterId, String boss) throws NonexistingCarryException {
+    public static void acceptCarry(String atkerId, String requesterId, String boss) throws NonexistentCarryException {
         String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
         String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
 
@@ -67,17 +67,17 @@ public class CarryController {
             Main.jedis.incrBy(atkerCarryKey, amt);
         } catch (NumberFormatException e) {
             // This carry was not in atker's request list
-            throw new NonexistingCarryException("The boss was not in the atker's request list");
+            throw new NonexistentCarryException("The boss was not in the atker's request list");
         }
     }
 
-    public static void acceptCarry(String atkerId, String requesterId, String boss, int amount) throws NonexistingCarryException {
+    public static void acceptCarry(String atkerId, String requesterId, String boss, int amount) throws NonexistentCarryException {
         String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
         String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
 
         if (Main.jedis.get(atkerRequestKey) == null) {
             // This carry was not in atker's request list
-            throw new NonexistingCarryException("The boss was not in the atker's request list");
+            throw new NonexistentCarryException("The boss was not in the atker's request list");
         } else {
             Main.jedis.watch(atkerRequestKey, atkerCarryKey);
             Transaction t = Main.jedis.multi();
@@ -87,10 +87,10 @@ public class CarryController {
         }
     }
 
-    public static void denyCarry(String atkerId, String requesterId, String boss) throws NonexistingCarryException {
+    public static void denyCarry(String atkerId, String requesterId, String boss) throws NonexistentCarryException {
         String atkerRequestKey = getRedisKey(Config.REDIS_REQUEST_KEYWORD, atkerId, requesterId, boss);
         if (Main.jedis.get(atkerRequestKey) == null) {
-            throw new NonexistingCarryException("There exists no " + boss + "request from " + requesterId);
+            throw new NonexistentCarryException("There exists no " + boss + "request from " + requesterId);
         } else {
             Main.jedis.del(atkerRequestKey);
         }
