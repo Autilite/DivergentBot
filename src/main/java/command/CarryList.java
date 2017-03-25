@@ -34,20 +34,21 @@ public class CarryList extends AbstractCommand {
 
     @Override
     public void execute(String[] args, MessageChannel ch, User user) {
-        StringBuilder response = new StringBuilder();
-        String target = user.getId();
-
-        for (int i = 0; i < args.length; i++) {
-            System.out.println("Args[" + i + "] = " + args[0]);
+        if (!(args.length == 0) && !(args.length == 1)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+            return;
         }
+        StringBuilder response = new StringBuilder();
 
-        if (args.length >= 1) {
+        // Sanitize input
+        String target = user.getId();   // use current user if none is specified
+        if (args.length == 1) {
             target = Utils.stripId(args[0]);
-            if (target == null) {
-                target = user.getId();
+            if (!Main.isGuildMember(target)){
+                ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+                return;
             }
         }
-        System.out.println("target " + target);
         response.append(Main.jda.getUserById(target).getName()).append(" is currently carrying the following users");
 
         Set<String> carrylist = CarryController.getCarryList(target);

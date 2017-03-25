@@ -36,15 +36,21 @@ public class DenyRequest extends AbstractCommand {
             return;
         }
         // Parse arguments
+        // Don't need to check if the target is a member of the guild
+        // This is to ensure the user is still able to remove a request
+        // even if the requester has quit the guild
         String target = Utils.stripId(args[0]);
+        String boss;
+
         if (args.length == 1) {
-            // delete all requests from target
+            // no boss specified so delete all requests from target
             CarryController.denyCarry(user.getId(), target);
             ch.sendMessage(user.getAsMention() + "\nRejected all boss requests from "
                     + Main.jda.getUserById(target).getAsMention()).queue();
         } else {
             // delete all requests from target for the given boss
-            String boss = args[1];
+            // TODO check if boss is a valid boss
+            boss = args[1];
             try {
                 CarryController.denyCarry(user.getId(), target, boss);
                 ch.sendMessage(user.getAsMention() + "\nRejected `" + boss +"` requests from "

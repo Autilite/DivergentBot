@@ -36,4 +36,12 @@ public class Main {
     public static String getBotAsMention () {
         return jda.getSelfUser().getAsMention();
     }
+
+    public static boolean isGuildMember(String userId) {
+        return jda.getUsers().contains(jda.getUserById(userId));
+    }
+
+    public static boolean isCarryBoss(String boss) {
+        return true;
+    }
 }

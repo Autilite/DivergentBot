@@ -35,9 +35,15 @@ public class CarryMe extends AbstractCommand {
             ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;
         }
+        // Sanitize inputs
         String target = stripId(args[0]);
+        // TODO check if boss is valid
         String boss = args[1];
         int amount = 1;
+        if (!Main.isGuildMember(target) || !Main.isCarryBoss(boss)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+            return;
+        }
         if (args.length == 3) {
             try {
                 amount = Integer.parseInt(args[2]);
@@ -51,6 +57,7 @@ public class CarryMe extends AbstractCommand {
                 return;
             }
         }
+
         String author = stripId(user.getId());
         System.out.println("Add request to: " + target + ":" + author + ":" + boss + ":" + amount);
         if (author.equals(target)) {
@@ -58,7 +65,6 @@ public class CarryMe extends AbstractCommand {
             ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list :que:").queue();
             return;
         }
-        // TODO check if target is a user in the guild
         CarryController.requestCarry(author, target, boss, amount);
         ch.sendMessage(user.getName() + " has requested " + amount + " " + boss + " carry run(s) from "
                 + Main.jda.getUserById(target).getAsMention()).queue();

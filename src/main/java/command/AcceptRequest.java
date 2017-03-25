@@ -36,8 +36,15 @@ public class AcceptRequest extends AbstractCommand {
         }
         // Parse arguments
         String target = Utils.stripId(args[0]);
+        // TODO check if boss is a valid boss
         String boss = args[1];
         int amount = 1;
+
+        if (!Main.isGuildMember(target) || !Main.isCarryBoss(boss)) {
+            ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+            return;
+        }
+
         if (args.length == 3) {
             // and amount argument
             try {
