@@ -2,6 +2,7 @@ package command;
 
 import database.CarryController;
 import exception.NonexistentCarryException;
+import main.Bosses;
 import main.Main;
 import main.Utils;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -13,7 +14,7 @@ import net.dv8tion.jda.core.entities.User;
 public class DenyRequest extends AbstractCommand {
     @Override
     public String getName() {
-        return "evilcolee";
+        return "denyrequest";
     }
 
     @Override
@@ -49,8 +50,11 @@ public class DenyRequest extends AbstractCommand {
                     + Main.jda.getUserById(target).getAsMention()).queue();
         } else {
             // delete all requests from target for the given boss
-            // TODO check if boss is a valid boss
             boss = args[1];
+            if (!Bosses.isBoss(boss)){
+                ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
+                return;
+            }
             try {
                 CarryController.denyCarry(user.getId(), target, boss);
                 ch.sendMessage(user.getAsMention() + "\nRejected `" + boss +"` requests from "

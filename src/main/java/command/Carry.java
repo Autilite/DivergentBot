@@ -1,6 +1,7 @@
 package command;
 
 import database.CarryController;
+import main.Bosses;
 import main.Main;
 import main.Utils;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -38,11 +39,10 @@ public class Carry extends AbstractCommand {
         }
         // Parse input
         String target = stripId(args[0]);
-        // TODO check if boss is a valid boss
         String boss = args[1];
         int amount = 1;
 
-        if (!Main.isGuildMember(target) || !Main.isCarryBoss(boss)) {
+        if (!Main.isGuildMember(target) || !Bosses.isBoss(boss)) {
             ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;
         }

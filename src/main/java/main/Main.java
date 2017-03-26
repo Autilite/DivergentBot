@@ -40,8 +40,4 @@ public class Main {
     public static boolean isGuildMember(String userId) {
         return jda.getUsers().contains(jda.getUserById(userId));
     }
-
-    public static boolean isCarryBoss(String boss) {
-        return true;
-    }
 }

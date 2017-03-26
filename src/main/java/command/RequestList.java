@@ -17,7 +17,7 @@ import static main.Utils.carryModelLeecherToString;
 public class RequestList extends AbstractCommand {
     @Override
     public String getName() {
-        return "raggaeclaw";
+        return "requestlist";
     }
 
     @Override

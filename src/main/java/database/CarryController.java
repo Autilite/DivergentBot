@@ -141,7 +141,7 @@ public class CarryController {
         String key = keyword + Config.REDIS_KEY_SEPARATOR
                 + atkerId + Config.REDIS_KEY_SEPARATOR
                 + requesterId + Config.REDIS_KEY_SEPARATOR
-                + boss;
+                + boss.toUpperCase();
         return key;
     }
 
