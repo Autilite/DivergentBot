@@ -38,7 +38,7 @@ public class CarryMe extends AbstractCommand {
         }
         // Sanitize inputs
         String target = stripId(args[0]);
-        String boss = args[1];
+        String boss = args[1].toUpperCase();
         int amount = 1;
         if (!Main.isGuildMember(target) || !Bosses.isBoss(boss)) {
             ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
@@ -61,12 +61,11 @@ public class CarryMe extends AbstractCommand {
         String author = stripId(user.getId());
         System.out.println("Add request to: " + target + ":" + author + ":" + boss + ":" + amount);
         if (author.equals(target)) {
-            // TODO custom emoji
-            ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list :que:").queue();
+            ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list ").queue();
             return;
         }
         CarryController.requestCarry(author, target, boss, amount);
-        ch.sendMessage(user.getName() + " has requested " + amount + " " + boss + " carry run(s) from "
+        ch.sendMessage(user.getName() + " has requested " + amount + " `" + boss + "` carry run(s) from "
                 + Main.jda.getUserById(target).getAsMention()).queue();
     }
 }

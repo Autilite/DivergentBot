@@ -46,21 +46,21 @@ public class DenyRequest extends AbstractCommand {
         if (args.length == 1) {
             // no boss specified so delete all requests from target
             CarryController.denyCarry(user.getId(), target);
-            ch.sendMessage(user.getAsMention() + "\nRejected all boss requests from "
+            ch.sendMessage(user.getAsMention() + " has rejected all boss requests from "
                     + Main.jda.getUserById(target).getAsMention()).queue();
         } else {
             // delete all requests from target for the given boss
-            boss = args[1];
+            boss = args[1].toUpperCase();
             if (!Bosses.isBoss(boss)){
                 ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
                 return;
             }
             try {
                 CarryController.denyCarry(user.getId(), target, boss);
-                ch.sendMessage(user.getAsMention() + "\nRejected `" + boss +"` requests from "
-                        + Main.jda.getUserById(target).getAsMention()).queue();
+                ch.sendMessage(user.getAsMention() + " has rejected " + Main.jda.getUserById(target).getAsMention()
+                        +  "'s request for `" + boss +"`").queue();
             } catch (NonexistentCarryException e) {
-                ch.sendMessage(user.getAsMention() + "\nYou have no `" + boss + "` request from "
+                ch.sendMessage(user.getAsMention() + ", you have no `" + boss + "` request from "
                         + Main.jda.getUserById(target).getName()).queue();
             }
         }

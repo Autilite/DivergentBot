@@ -1,6 +1,7 @@
 package main;
 
 import database.CarryModel;
+import javafx.util.Pair;
 
 /**
  * Created by Kelvin on 22/03/2017.
@@ -16,6 +17,17 @@ public class Utils {
             s += " (" + model.getNumCarries() + ")";
         }
         return s;
+    }
+
+    public static String bossPairToString(Pair<String, Integer> aBossPair) {
+        String b = aBossPair.getKey();
+        StringBuilder result = new StringBuilder(" ");
+        result.append(b);
+        int amount = aBossPair.getValue();
+        if (amount > 1) {
+            result.append(" (").append(amount).append(")");
+        }
+        return result.toString();
     }
 
     public static String usageToString(String[] usage) {

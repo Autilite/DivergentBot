@@ -39,7 +39,7 @@ public class Carry extends AbstractCommand {
         }
         // Parse input
         String target = stripId(args[0]);
-        String boss = args[1];
+        String boss = args[1].toUpperCase();
         int amount = 1;
 
         if (!Main.isGuildMember(target) || !Bosses.isBoss(boss)) {
@@ -67,7 +67,7 @@ public class Carry extends AbstractCommand {
         }
         // Add target to user's carry list
         CarryController.addCarry(author, target, boss, amount);
-        ch.sendMessage(user.getName() + " has provided " + amount + " " + boss + " carry run(s) "
+        ch.sendMessage(user.getName() + " has provided " + amount + " `" + boss + "` <:entrance_ticket:294022828725108736> for "
         + Main.jda.getUserById(target).getAsMention()).queue();
     }
 

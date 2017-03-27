@@ -37,7 +37,7 @@ public class AcceptRequest extends AbstractCommand {
         }
         // Parse arguments
         String target = Utils.stripId(args[0]);
-        String boss = args[1];
+        String boss = args[1].toUpperCase();
         int amount = 1;
 
         if (!Main.isGuildMember(target) || !Bosses.isBoss(boss)){
@@ -76,6 +76,6 @@ public class AcceptRequest extends AbstractCommand {
             }
         }
         ch.sendMessage(user.getAsMention() + " has accepted " + Main.jda.getUserById(target).getAsMention()
-                + "'s request for carrying " + boss).queue();
+                + "'s request for carrying `" + boss + "`").queue();
     }
 }
