@@ -3,6 +3,7 @@ package database;
 import exception.NonexistentCarryException;
 import main.Config;
 import main.Main;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
 
@@ -103,6 +104,37 @@ public class CarryController {
         System.out.println(keypPattern);
         Set<String> keys = Main.jedis.keys(keypPattern);
         keys.forEach(s -> Main.jedis.del(s));
+    }
+
+    public static int removeCarry(String atkerId, String requesterId, String boss, int amount) throws NonexistentCarryException {
+        String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
+        if (Main.jedis.get(atkerCarryKey) == null) {
+            throw new NonexistentCarryException("There exists no " + boss + "carry for " + requesterId);
+        }
+        Jedis jedis = Main.jedis;
+        jedis.watch(atkerCarryKey);
+        int current = Integer.parseInt(jedis.get(atkerCarryKey));
+        int value = current - amount;
+        Transaction t = jedis.multi();
+        if (value <= 0) {
+            t.del(atkerCarryKey);
+            t.exec();
+            return current;
+        } else {
+            t.decrBy(atkerCarryKey, amount);
+            t.exec();
+            return amount;
+        }
+    }
+
+    public static int removeCarry(String atkerId, String requesterId, String boss) throws NonexistentCarryException {
+        String atkerCarryKey = getRedisKey(Config.REDIS_CARRY_KEYWORD, atkerId, requesterId, boss);
+        String v = Main.jedis.get(atkerCarryKey);
+        if (v == null) {
+            throw new NonexistentCarryException("There exists no " + boss + "carry for " + requesterId);
+        } else {
+            return removeCarry(atkerId, requesterId, boss, Integer.parseInt(v));
+        }
     }
 
     public static void addCarry(String atkerId, String requesterId, String boss, int amount) {
