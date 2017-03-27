@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.entities.User;
 public class AcceptRequest extends AbstractCommand {
     @Override
     public String getName() {
-        return "acceptrequest";
+        return "accept";
     }
 
     @Override
