@@ -53,18 +53,21 @@ public class Carry extends AbstractCommand {
                 if (amount <= 0) {
                     ch.sendMessage(user.getAsMention() + "\nYou cannot select a non-positive amount of carries")
                             .queue();
+                    return;
                 }
             } catch (NumberFormatException e) {
                 ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
                 return;
             }
         }
+
         String author = stripId(user.getId());
         System.out.println("Add carry to: " + author + ":" + target + ":" + boss + ":" + amount);
         if (author.equals(target)) {
             ch.sendMessage(user.getAsMention()+ "\nYou cannot add yourself to your own carry list").queue();
             return;
         }
+
         // Add target to user's carry list
         CarryController.addCarry(author, target, boss, amount);
         ch.sendMessage(user.getName() + " has provided " + amount + " `" + boss + "` <:entrance_ticket:294022828725108736> for "

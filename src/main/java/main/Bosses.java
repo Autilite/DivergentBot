@@ -13,6 +13,7 @@ public enum Bosses {
     CVB,
     CVELL,
     CPB,
+    ECYG,
     NCYG,
     LOTUS,
     DAMIEN,
