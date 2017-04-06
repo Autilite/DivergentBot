@@ -52,9 +52,6 @@ public class CommandHandler {
 
         // Split message into string array to check if it's a command
         List<String> args = splitSpaceExceptQuotes(msg);
-        for (int i = 0; i < args.size(); i++) {
-            System.out.println("Arg[" + i + "]: " + "\"" + args.get(i) + "\"");
-        }
 
         // Check if the message is a command:
         //  1) Uses correct prefix
