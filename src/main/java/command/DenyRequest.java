@@ -31,7 +31,7 @@ public class DenyRequest extends AbstractCommand {
 
     @Override
     public void execute(String[] args, MessageChannel ch, User user) {
-        // @FluffyBot deny @target [boss]
+        // @Divergent deny @target [boss]
         if (!(args.length == 1) && !(args.length == 2)) {
             ch.sendMessage("Usage: " + Utils.usageToString(getUsage())).queue();
             return;

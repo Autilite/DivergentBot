@@ -22,7 +22,11 @@ public class Main {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.BOT_TOKEN).buildBlocking();
             CommandHandler handler = new CommandHandler();
             jda.addEventListener(new MessageListener(handler));
-            jda.getPresence().setGame(Game.of(Config.STATUS_MESSAGE));
+            if (Config.STATUS_MESSAGE.isEmpty()) {
+                jda.getPresence().setGame(null);
+            } else {
+                jda.getPresence().setGame(Game.of(Config.STATUS_MESSAGE));
+            }
         } catch (LoginException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
