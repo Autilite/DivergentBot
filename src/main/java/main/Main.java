@@ -35,6 +35,7 @@ public class Main {
             e.printStackTrace();
         }
         jedis = new Jedis(Config.REDIS_HOST);
+        jedis.select(0);
     }
 
     public static String getBotAsMention () {
